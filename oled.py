@@ -419,7 +419,7 @@ import sys
 def parse_data(data):
     try:
         # Veriyi '<' ve '>' arasındaki kısmı al
-        data = data[data.index('<') + 1:data.index('>')]
+        data = data[data.index('(') + 1:data.index(')')]
         # ',' ile ayrılmış kısımları al
         parts = data.split(',')
         # Parçalardan a, b ve c'yi çıkar
@@ -454,8 +454,8 @@ def handle_client(client_socket, client_address):
         if temp_a is not None and temp_b is not None and temp_c is not None:
             print(f"temp_a: {temp_a}, temp_b: {temp_b}, temp_c: {temp_c}")
             display.clear_display()
-            display.write_text(0,8,"hello")
-            display.write_text(0,20,"TEMP  = ")
+            display.write_text(0,8,temp_b)
+            display.write_text(0,20,temp_c)
             display.update()
 			
 
