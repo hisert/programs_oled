@@ -474,7 +474,7 @@ def handle_client(client_socket, client_address):
                 print_ip()
             break
         received_message = data.decode()
-        temp_a, temp_b, temp_c , , temp_d = parse_data(received_message)
+        temp_a, temp_b, temp_c , temp_d = parse_data(received_message)
         if temp_a is not None and temp_b is not None and temp_c is not None:
             if temp_a == "0":
                 display.clear_display()
