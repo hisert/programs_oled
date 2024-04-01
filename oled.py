@@ -433,7 +433,7 @@ def parse_data(data):
         data = data[data.index('(') + 1:data.index(')')]
         parts = data.split(',')
         temp_a = parts[0]
-		if temp_a == "1":
+			if temp_a == "1":
 			temp_b = parts[1]
 			temp_c = parts[2]
         return temp_a, temp_b, temp_c
