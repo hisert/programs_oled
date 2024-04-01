@@ -442,7 +442,8 @@ def parse_data(data):
         if temp_a == "1":
             temp_b = parts[1]
             temp_c = parts[2]
-        return temp_a, temp_b, temp_c
+            temp_d = parts[3]
+        return temp_a, temp_b, temp_c, temp_d
     except Exception as e:
         print("Veri ayrıştırma hatası:", e)
         return None, None, None
@@ -473,17 +474,15 @@ def handle_client(client_socket, client_address):
                 print_ip()
             break
         received_message = data.decode()
-        temp_a, temp_b, temp_c = parse_data(received_message)
+        temp_a, temp_b, temp_c , , temp_d = parse_data(received_message)
         if temp_a is not None and temp_b is not None and temp_c is not None:
             if temp_a == "0":
                 display.clear_display()
-                display.update()
             if temp_a == "1":
-                display.clear_display()
-                display.write_text(0,8,temp_b)
-                display.write_text(0,20,temp_c)
-                display.update()
+                display.write_text(int(temp_b),int(temp_c),temp_d)
             if temp_a == "2":
+                display.update()
+            if temp_a == "9":
                 print_ip()
     client_socket.close()
 
