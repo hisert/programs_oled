@@ -433,9 +433,9 @@ def parse_data(data):
         data = data[data.index('(') + 1:data.index(')')]
         parts = data.split(',')
         temp_a = parts[0]
-		    if temp_a == "1":
-            temp_b = parts[1]
-        	  temp_c = parts[2]
+		if temp_a == "1":
+			temp_b = parts[1]
+			temp_c = parts[2]
         return temp_a, temp_b, temp_c
     except Exception as e:
         print("Veri ayrıştırma hatası:", e)
@@ -459,8 +459,7 @@ def handle_client(client_socket, client_address):
                 display.write_text(0,8,temp_b)
                 display.write_text(0,20,temp_c)
                 display.update()
-			if temp_a == "2":
-				my_ip = get_ip_address()
+			if temp_a == "2":my_ip = get_ip_address()
 				display.clear_display()
 				display.write_text(0,8,my_ip)
 				display.update()
