@@ -414,7 +414,8 @@ import socket
 import threading
 import signal
 import sys
-display = SSD1306Display(128, 32, 0x3C)
+
+# Gelen veriyi parse etmek için fonksiyon
 def parse_data(data):
     try:
         data = data[data.index('(') + 1:data.index(')')]
@@ -436,24 +437,23 @@ def handle_client(client_socket, client_address):
         if not data:
             break
         received_message = data.decode()
+        print(f"Alınan veri: {received_message}")
         temp_a, temp_b, temp_c = parse_data(received_message)
         if temp_a is not None and temp_b is not None and temp_c is not None:
-            display.write_text(0,8,temp_b)
-	        display.write_text(0,16,temp_c)
+            print(f"temp_a: {temp_a}, temp_b: {temp_b}, temp_c: {temp_c}")
+        response = "Veri alındı. Teşekkürler!"
+        client_socket.sendall(response.encode('utf-8'))
     client_socket.close()
-	
+
 def main():
-    display.INIT()
-    display.clear_display()
-    display.update()
     signal.signal(signal.SIGINT, signal_handler)
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('0.0.0.0', 12346))
     server_socket.listen(5)
+
     while True:
         client_socket, client_address = server_socket.accept()
         client_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
         client_thread.start()
-	    
 if __name__ == "__main__":
     main()
