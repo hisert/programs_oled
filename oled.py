@@ -497,12 +497,16 @@ def main():
 
     # IP adresini bastırmak için ayrı bir thread oluştur
     ip_thread = threading.Thread(target=print_ip_thread)
-    ip_thread.start()
 
     while True:
         client_socket, client_address = server_socket.accept()
         client_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
         client_thread.start()
 
+        # Hiçbir istemci bağlı değilse ve IP threadi başlamamışsa
+        if threading.active_count() == 1 and not ip_thread.is_alive():
+            ip_thread.start()
+
 if __name__ == "__main__":
     main()
+
