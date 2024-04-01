@@ -416,13 +416,26 @@ import threading
 import signal
 import sys
 
+def get_ip_address():
+    ip_address = ''
+    try:
+        # Yerel bir bağlantı noktası oluşturarak gerçek IP adresini almayı deneyin
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))  # Google DNS'e bağlanmayı deniyoruz
+        ip_address = s.getsockname()[0]
+        s.close()
+    except Exception as e:
+        print("Hata:", e)
+    return ip_address
+
 def parse_data(data):
     try:
         data = data[data.index('(') + 1:data.index(')')]
         parts = data.split(',')
         temp_a = parts[0]
-        temp_b = parts[1]
-        temp_c = parts[2]
+		if temp_a == "1":
+        	temp_b = parts[1]
+        	temp_c = parts[2]
         return temp_a, temp_b, temp_c
     except Exception as e:
         print("Veri ayrıştırma hatası:", e)
@@ -446,6 +459,11 @@ def handle_client(client_socket, client_address):
                 display.write_text(0,8,temp_b)
                 display.write_text(0,20,temp_c)
                 display.update()
+			if temp_a == "2":
+				my_ip = get_ip_address()
+				display.clear_display()
+				display.write_text(0,8,my_ip)
+				display.update()
     client_socket.close()
 
 display = SSD1306Display(128, 32, 0x3C)
