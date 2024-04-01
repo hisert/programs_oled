@@ -442,7 +442,7 @@ def handle_client(client_socket, client_address):
 
 display = SSD1306Display(128, 32, 0x3C)
 def main():
-    display.clear_display()
+  //  display.clear_display()
     display.write_text(0,8,"HELLO")
     display.write_text(0,20,"WORLD")
     display.update()
