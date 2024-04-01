@@ -419,7 +419,7 @@ import sys
 def parse_data(data):
     try:
         # Veriyi '<' ve '>' arasındaki kısmı al
-        data = data[data.index('<') + 1:data.index('>')]
+        data = data[data.index('(') + 1:data.index(')')]
         # ',' ile ayrılmış kısımları al
         parts = data.split(',')
         # Parçalardan a, b ve c'yi çıkar
