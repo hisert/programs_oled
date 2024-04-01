@@ -450,13 +450,10 @@ def parse_data(data):
         return None, None, None, None
 
 def signal_handler(sig, frame):
-    print("Ctrl+C ile sunucu kapatılıyor...")
     server_socket.close()  
-
     for thread in threading.enumerate():
         if thread != threading.main_thread():  # Ana threadi kapatma
             thread.join()
-
     sys.exit(0)
 
 def print_ip():
