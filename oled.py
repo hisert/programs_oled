@@ -415,11 +415,29 @@ import threading
 import signal
 import sys
 
+# Gelen veriyi parse etmek için fonksiyon
+def parse_data(data):
+    try:
+        # Veriyi '<' ve '>' arasındaki kısmı al
+        data = data[data.index('<') + 1:data.index('>')]
+        # ',' ile ayrılmış kısımları al
+        parts = data.split(',')
+        # Parçalardan a, b ve c'yi çıkar
+        temp_a = parts[0]
+        temp_b = parts[1]
+        temp_c = parts[2]
+        return temp_a, temp_b, temp_c
+    except Exception as e:
+        print("Veri ayrıştırma hatası:", e)
+        return None, None, None
+
+# Ctrl+C sinyalini işleyen fonksiyon
 def signal_handler(sig, frame):
     print("Ctrl+C ile sunucu kapatılıyor...")
     server_socket.close()
     sys.exit(0)
 
+# İstemciye hizmet veren fonksiyon
 def handle_client(client_socket, client_address):
     print(f"{client_address} adresinden bağlantı kabul edildi.")
 
@@ -431,6 +449,11 @@ def handle_client(client_socket, client_address):
         received_message = data.decode()
         print(f"Alınan veri: {received_message}")
 
+        # Gelen veriyi parse et
+        temp_a, temp_b, temp_c = parse_data(received_message)
+        if temp_a is not None and temp_b is not None and temp_c is not None:
+            print(f"temp_a: {temp_a}, temp_b: {temp_b}, temp_c: {temp_c}")
+
         # İstemciye cevap gönder
         response = "Veri alındı. Teşekkürler!"
         client_socket.sendall(response.encode('utf-8'))
@@ -438,25 +461,20 @@ def handle_client(client_socket, client_address):
     # Bağlantıyı kapat
     client_socket.close()
     print(f"{client_address} adresinden bağlantı kapatıldı.")
-	
-display = SSD1306Display(128, 32, 0x3C)
 
+# Ana fonksiyon
 def main():
-    display.INIT()
-    display.clear_display()
-    display.update()
-    # Ctrl+C ile sunucuyu kapatmak için sinyal işleyici ekle
+    # Ctrl+C sinyalini işle
     signal.signal(signal.SIGINT, signal_handler)
 
-    display.INIT()
-    display.clear_display()
+    # Sunucu soketini oluştur ve bağlantıları kabul etmeye başla
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('0.0.0.0', 12346))  # Tüm ağ arayüzlerinden gelen bağlantıları kabul et
+    server_socket.bind(('0.0.0.0', 12346))
     server_socket.listen(5)
     print("Sunucu başlatıldı. İstemci bekleniyor...")
 
     while True:
-        # Bağlantıyı kabul et
+        # İstemciden gelen bağlantıyı kabul et
         client_socket, client_address = server_socket.accept()
 
         # İstemciye hizmet vermek için yeni bir iş parçacığı oluştur
