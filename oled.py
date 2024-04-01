@@ -492,8 +492,11 @@ def main():
     display.init()
     
     while True:
-        if get_ip_address() != "":
+        ip_find = get_ip_address().find("192.168")
+        if ip_find != -1:
             break
+        else:
+            time.sleep(0.5)
     print_ip()
     signal.signal(signal.SIGINT, signal_handler)
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
