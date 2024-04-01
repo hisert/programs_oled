@@ -453,10 +453,10 @@ def handle_client(client_socket, client_address):
         temp_a, temp_b, temp_c = parse_data(received_message)
         if temp_a is not None and temp_b is not None and temp_c is not None:
             print(f"temp_a: {temp_a}, temp_b: {temp_b}, temp_c: {temp_c}")
-			display.clear_display()
-			display.write_text(0,8,temp_b)
-			display.write_text(0,16,temp_c)
-			display.update()
+	    display.clear_display()
+	    display.write_text(0,8,temp_b)
+	    display.write_text(0,16,temp_c)
+	    display.update()
 
         # İstemciye cevap gönder
         response = "Veri alındı. Teşekkürler!"
