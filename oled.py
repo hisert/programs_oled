@@ -466,8 +466,8 @@ def handle_client(client_socket, client_address):
     while True:
         data = client_socket.recv(1024)
         if not data:
-			  client_counter = client_counter - 1
-            if client_counter == 0:
+			  client_count = client_count - 1
+            if client_count == 0:
                 print_ip()
             break
         received_message = data.decode()
@@ -483,9 +483,9 @@ def handle_client(client_socket, client_address):
     client_socket.close()
 
 display = SSD1306Display(128, 32, 0x3C)
-client_counter = 0
+client_count = 0
 def main():
-    global client_counter
+    global client_count
     display.init()
     print_ip()
     signal.signal(signal.SIGINT, signal_handler)
@@ -498,7 +498,7 @@ def main():
         client_socket, client_address = server_socket.accept()
         client_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
         client_thread.start()
-		    client_counter = client_counter + 1
+		    client_count = client_count + 1
 
 if __name__ == "__main__":
     main()
