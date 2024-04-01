@@ -168,7 +168,7 @@ class SSD1306Display:
         self.SSD1306_DATA = 0xC0
         self.SSD1306_DATA_CONTINUE = 0x40
 
-    def INIT(self):
+    def init(self):
         self.ssd1306_command(self.SSD1306_DISPLAY_OFF)
         self.ssd1306_command(self.SSD1306_SET_DISPLAY_CLOCK_DIV_RATIO)
         self.ssd1306_command(0x80)
@@ -466,8 +466,8 @@ def handle_client(client_socket, client_address):
 # Ana fonksiyon
 display = SSD1306Display(128, 32, 0x3C)
 def main():
-    display.INIT()
-	display.clear_display()
+    display.init()
+    display.clear_display()
     display.update()
     # Ctrl+C sinyalini işle
     signal.signal(signal.SIGINT, signal_handler)
