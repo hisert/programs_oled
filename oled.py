@@ -453,6 +453,10 @@ def handle_client(client_socket, client_address):
         temp_a, temp_b, temp_c = parse_data(received_message)
         if temp_a is not None and temp_b is not None and temp_c is not None:
             print(f"temp_a: {temp_a}, temp_b: {temp_b}, temp_c: {temp_c}")
+			display.clear_display()
+			display.write_text(0,8,temp_b)
+			display.write_text(0,16,temp_c)
+			display.update()
 
         # İstemciye cevap gönder
         response = "Veri alındı. Teşekkürler!"
@@ -463,7 +467,11 @@ def handle_client(client_socket, client_address):
     print(f"{client_address} adresinden bağlantı kapatıldı.")
 
 # Ana fonksiyon
+display = SSD1306Display(128, 32, 0x3C)
 def main():
+	display.INIT()
+    display.clear_display()
+    display.update()
     # Ctrl+C sinyalini işle
     signal.signal(signal.SIGINT, signal_handler)
 
