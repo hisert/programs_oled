@@ -417,7 +417,7 @@ import sys
 
 def parse_data(data):
     try:
-        data = data[data.index('<') + 1:data.index('>')]
+        data = data[data.index('(') + 1:data.index(')')]
         parts = data.split(',')
         temp_a = parts[0]
         temp_b = parts[1]
