@@ -462,9 +462,12 @@ def print_ip():
     display.update()
 
 def handle_client(client_socket, client_address):
+    global client_count
     while True:
         data = client_socket.recv(1024)
         if not data:
+            if threading.active_count() == 1
+                print_ip()
             break
         received_message = data.decode()
         temp_a, temp_b, temp_c = parse_data(received_message)
@@ -479,10 +482,9 @@ def handle_client(client_socket, client_address):
     client_socket.close()
 
 display = SSD1306Display(128, 32, 0x3C)
-client_count = 0  # Bağlı istemci sayısı için sayaç
 def main():
-    global client_count
     display.init()
+    print_ip()
     signal.signal(signal.SIGINT, signal_handler)
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('0.0.0.0', 12346))
@@ -491,15 +493,10 @@ def main():
 
     while True:
         client_socket, client_address = server_socket.accept()
-        client_count += 1  # Bağlı istemci sayısını artır
         client_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
         client_thread.start()
 
-        # Son bağlı istemci ise ve IP daha önce basılmamışsa
-        if client_count == 1:
-            print_ip()
-            client_count = 0  # Sayaçı sıfırla
-
 if __name__ == "__main__":
     main()
+
 
