@@ -415,6 +415,7 @@ import socket
 import threading
 import signal
 import sys
+import time
 
 def get_ip_address():
     ip_address = ''
@@ -447,6 +448,12 @@ def signal_handler(sig, frame):
     server_socket.close()
     sys.exit(0)
 
+def print_ip():
+    my_ip = get_ip_address()
+    display.clear_display()
+    display.write_text(0,8,my_ip)
+    display.update()
+  
 def handle_client(client_socket, client_address):
 
     while True:
@@ -462,10 +469,8 @@ def handle_client(client_socket, client_address):
                 display.write_text(0,20,temp_c)
                 display.update()
             if temp_a == "2":
-                my_ip = get_ip_address()
-                display.clear_display()
-                display.write_text(0,8,my_ip)
-                display.update()
+                print_ip()
+                
     client_socket.close()
 
 display = SSD1306Display(128, 32, 0x3C)
@@ -481,6 +486,10 @@ def main():
         client_socket, client_address = server_socket.accept()
         client_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
         client_thread.start()
+        if threading.active_count() == 0:
+            print_ip()
+            time.sleep(0.1)
+            
 
 if __name__ == "__main__":
     main()
