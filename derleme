@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cd
+rm -r programs_oled
+pkill oled.py
+git clone https://github.com/hisert/programs_oled.git
+cd  programs_oled
+python3 oled.py
+
+
+
+
+
+
