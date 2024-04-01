@@ -437,25 +437,36 @@ def parse_data(data):
         temp_b = ""
         temp_c = ""
         if temp_a == "1":
-          temp_b = parts[1]
-          temp_c = parts[2]
+            temp_b = parts[1]
+            temp_c = parts[2]
         return temp_a, temp_b, temp_c
     except Exception as e:
         print("Veri ayrıştırma hatası:", e)
         return None, None, None
 
 def signal_handler(sig, frame):
-    server_socket.close()
+    print("Ctrl+C ile sunucu kapatılıyor...")
+    server_socket.close()  # Sunucu soketini kapat
+
+    # Tüm istemci threadlerini kapat
+    for thread in threading.enumerate():
+        if thread != threading.main_thread():  # Ana threadi kapatma
+            thread.join()
+
     sys.exit(0)
 
-def print_ip():
-    my_ip = get_ip_address()
-    display.clear_display()
-    display.write_text(0,8,my_ip)
-    display.update()
-  
-def handle_client(client_socket, client_address):
+def print_ip_thread():
+    while True:
+        # Hiçbir istemci bağlı değilse
+        if threading.active_count() == 1:
+            my_ip = get_ip_address()
+            display.clear_display()
+            display.write_text(0,8,my_ip)
+            display.update()
+            time.sleep(0.1)  # Küçük bir bekleme süresi ekle, CPU'yu çok yormamak için
+        time.sleep(1)  # 1 saniye bekle
 
+def handle_client(client_socket, client_address):
     while True:
         data = client_socket.recv(1024)
         if not data:
@@ -468,9 +479,6 @@ def handle_client(client_socket, client_address):
                 display.write_text(0,8,temp_b)
                 display.write_text(0,20,temp_c)
                 display.update()
-            if temp_a == "2":
-                print_ip()
-                
     client_socket.close()
 
 display = SSD1306Display(128, 32, 0x3C)
@@ -482,12 +490,14 @@ def main():
     server_socket.listen(5)
     print("OLED PROG. STARTED")
 
+    # IP adresini bastırmak için ayrı bir thread oluştur
+    ip_thread = threading.Thread(target=print_ip_thread)
+    ip_thread.start()
+
     while True:
         client_socket, client_address = server_socket.accept()
         client_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
         client_thread.start()
-        if threading.active_count() == 1:
-            print_ip()
-            time.sleep(0.1)
+
 if __name__ == "__main__":
     main()
