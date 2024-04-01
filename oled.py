@@ -417,6 +417,9 @@ import signal
 import sys
 import time
 
+display = SSD1306Display(128, 32, 0x3C)
+client_count = 0
+
 def get_ip_address():
     ip_address = ''
     try:
@@ -446,9 +449,8 @@ def parse_data(data):
 
 def signal_handler(sig, frame):
     print("Ctrl+C ile sunucu kapatılıyor...")
-    server_socket.close()  # Sunucu soketini kapat
+    server_socket.close()  
 
-    # Tüm istemci threadlerini kapat
     for thread in threading.enumerate():
         if thread != threading.main_thread():  # Ana threadi kapatma
             thread.join()
@@ -473,6 +475,9 @@ def handle_client(client_socket, client_address):
         received_message = data.decode()
         temp_a, temp_b, temp_c = parse_data(received_message)
         if temp_a is not None and temp_b is not None and temp_c is not None:
+            if temp_a == "0":
+                display.clear_display()
+                display.update()
             if temp_a == "1":
                 display.clear_display()
                 display.write_text(0,8,temp_b)
@@ -482,8 +487,6 @@ def handle_client(client_socket, client_address):
                 print_ip()
     client_socket.close()
 
-display = SSD1306Display(128, 32, 0x3C)
-client_count = 0
 def main():
     global client_count
     display.init()
