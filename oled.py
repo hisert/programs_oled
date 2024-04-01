@@ -441,10 +441,11 @@ def handle_client(client_socket, client_address):
         received_message = data.decode()
         temp_a, temp_b, temp_c = parse_data(received_message)
         if temp_a is not None and temp_b is not None and temp_c is not None:
-            display.clear_display()
-            display.write_text(0,8,temp_a)
-            display.write_text(0,20,temp_b)
-            display.update()
+            if temp_a = "1":
+                display.clear_display()
+                display.write_text(0,8,temp_b)
+                display.write_text(0,20,temp_c)
+                display.update()
     client_socket.close()
 
 display = SSD1306Display(128, 32, 0x3C)
