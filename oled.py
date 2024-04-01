@@ -414,7 +414,7 @@ import socket
 import threading
 import signal
 import sys
-
+display = SSD1306Display(128, 32, 0x3C)
 def parse_data(data):
     try:
         data = data[data.index('(') + 1:data.index(')')]
@@ -437,12 +437,12 @@ def handle_client(client_socket, client_address):
             break
         received_message = data.decode()
         temp_a, temp_b, temp_c = parse_data(received_message)
-	display.write_text(0,8,temp_b)
-	display.write_text(0,16,temp_c)
+	if temp_a is not None and temp_b is not None and temp_c is not None:
+            display.write_text(0,8,temp_b)
+	    display.write_text(0,16,temp_c)
+	
     client_socket.close()
 	
-display = SSD1306Display(128, 32, 0x3C)
-
 def main():
     display.INIT()
     display.clear_display()
