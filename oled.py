@@ -419,7 +419,7 @@ import sys
 def parse_data(data):
     try:
         # Veriyi '<' ve '>' arasındaki kısmı al
-        data = data[data.index('(') + 1:data.index(')')]
+        data = data[data.index('<') + 1:data.index('>')]
         # ',' ile ayrılmış kısımları al
         parts = data.split(',')
         # Parçalardan a, b ve c'yi çıkar
@@ -453,10 +453,7 @@ def handle_client(client_socket, client_address):
         temp_a, temp_b, temp_c = parse_data(received_message)
         if temp_a is not None and temp_b is not None and temp_c is not None:
             print(f"temp_a: {temp_a}, temp_b: {temp_b}, temp_c: {temp_c}")
-	    # display.clear_display()
-	    display.write_text(0,8,temp_b)
-	    display.write_text(0,16,temp_c)
-	    display.update()
+			
 
         # İstemciye cevap gönder
         response = "Veri alındı. Teşekkürler!"
@@ -469,7 +466,7 @@ def handle_client(client_socket, client_address):
 # Ana fonksiyon
 display = SSD1306Display(128, 32, 0x3C)
 def main():
-    display.INIT()
+	display.INIT()
     display.clear_display()
     display.update()
     # Ctrl+C sinyalini işle
@@ -477,7 +474,7 @@ def main():
 
     # Sunucu soketini oluştur ve bağlantıları kabul etmeye başla
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('0.0.0.0', 12348))
+    server_socket.bind(('0.0.0.0', 12346))
     server_socket.listen(5)
     print("Sunucu başlatıldı. İstemci bekleniyor...")
 
