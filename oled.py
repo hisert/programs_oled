@@ -499,7 +499,7 @@ def main():
     print_ip()
     signal.signal(signal.SIGINT, signal_handler)
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('0.0.0.0', 12346))
+    server_socket.bind(('0.0.0.0', 12345))
     server_socket.listen(5)
     print("OLED PROG. STARTED")
 
