@@ -437,10 +437,9 @@ def handle_client(client_socket, client_address):
             break
         received_message = data.decode()
         temp_a, temp_b, temp_c = parse_data(received_message)
-	if temp_a is not None and temp_b is not None and temp_c is not None:
+        if temp_a is not None and temp_b is not None and temp_c is not None:
             display.write_text(0,8,temp_b)
-	    display.write_text(0,16,temp_c)
-	
+	        display.write_text(0,16,temp_c)
     client_socket.close()
 	
 def main():
