@@ -437,11 +437,9 @@ def handle_client(client_socket, client_address):
         if not data:
             break
         received_message = data.decode()
-        print(f"Alınan veri: {received_message}")
         temp_a, temp_b, temp_c = parse_data(received_message)
         if temp_a is not None and temp_b is not None and temp_c is not None:
             print(f"temp_a: {temp_a}, temp_b: {temp_b}, temp_c: {temp_c}")
-        response = "Veri alındı. Teşekkürler!"
         client_socket.sendall(response.encode('utf-8'))
     client_socket.close()
 
