@@ -491,8 +491,8 @@ def main():
     global client_count
     display.init()
     print_ip()
-    while True
-        if ip_address != ""
+    while True:
+        if ip_address != "":
             break
     signal.signal(signal.SIGINT, signal_handler)
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
