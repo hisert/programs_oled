@@ -469,7 +469,7 @@ def handle_client(client_socket, client_address):
 # Ana fonksiyon
 display = SSD1306Display(128, 32, 0x3C)
 def main():
-	display.INIT()
+    display.INIT()
     display.clear_display()
     display.update()
     # Ctrl+C sinyalini işle
