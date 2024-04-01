@@ -429,7 +429,7 @@ def get_ip_address():
         ip_address = s.getsockname()[0]
         s.close()
     except Exception as e:
-        print("Hata:", e)
+        ip_address=""
     return ip_address
 
 def parse_data(data):
@@ -491,6 +491,9 @@ def main():
     global client_count
     display.init()
     print_ip()
+    while True
+        if ip_address != ""
+            break
     signal.signal(signal.SIGINT, signal_handler)
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('0.0.0.0', 12346))
