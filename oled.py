@@ -486,10 +486,8 @@ def main():
         client_socket, client_address = server_socket.accept()
         client_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
         client_thread.start()
-        if threading.active_count() == 0:
+        if threading.active_count() == 1:
             print_ip()
             time.sleep(0.1)
-            
-
 if __name__ == "__main__":
     main()
