@@ -1,7 +1,3 @@
-import socket
-import threading
-import signal
-import sys
 import smbus2
 
 class SSD1306Display:
@@ -221,27 +217,23 @@ class SSD1306Display:
     def write_text(self, x, y, text):
         cnt = 0
         length = len(text)
-
         if x == "RIGHT":
             x = 128 - (length * self.x_size)
         if x == "CENTER":
             x = (128 - (length * self.x_size)) // 2
-
         while cnt < length:
             self.write(x + (cnt * self.x_size), y, text[cnt])
             cnt += 1
-
+		
     def write(self, x, y, value):
         font_idx = 0
         rowcnt = 0
         cnt = 0
         temp = 0
-
         cbyte = 0
         cx = 0
         cy = 0
         cbit = 0
-
         if self.y_size % 8 == 0:
             font_idx = ((ord(value) - self.offset) * (self.x_size * (self.y_size // 8))) + 4
             for rowcnt in range(self.y_size // 8):
@@ -286,12 +278,10 @@ class SSD1306Display:
         ddF_y = -2 * r
         x = 0
         y = r
-
         self.draw_pixel(x0, y0 + r, color)
         self.draw_pixel(x0, y0 - r, color)
         self.draw_pixel(x0 + r, y0, color)
         self.draw_pixel(x0 - r, y0, color)
-
         while x < y:
             if f >= 0:
                 y -= 1
@@ -300,7 +290,6 @@ class SSD1306Display:
             x += 1
             ddF_x += 2
             f += ddF_x
-
             self.draw_pixel(x0 + x, y0 + y, color)
             self.draw_pixel(x0 - x, y0 + y, color)
             self.draw_pixel(x0 + x, y0 - y, color)
@@ -309,7 +298,7 @@ class SSD1306Display:
             self.draw_pixel(x0 - y, y0 + x, color)
             self.draw_pixel(x0 + y, y0 - x, color)
             self.draw_pixel(x0 - y, y0 - x, color)
-
+		
     def fill_rectangle(self, x1, y1, x2, y2, color):
         for i in range(x1, x2 + 1):
             self.v_line(y1, y2, i, color)
@@ -421,6 +410,16 @@ class SSD1306Display:
         with smbus2.SMBus(self.I2c_channel) as bus:
             bus.write_i2c_block_data(address, data[0], data[1:])
 
+import socket
+import threading
+import signal
+import sys
+
+def signal_handler(sig, frame):
+    print("Ctrl+C ile sunucu kapatılıyor...")
+    server_socket.close()
+    sys.exit(0)
+
 def handle_client(client_socket, client_address):
     print(f"{client_address} adresinden bağlantı kabul edildi.")
 
@@ -439,28 +438,21 @@ def handle_client(client_socket, client_address):
     # Bağlantıyı kapat
     client_socket.close()
     print(f"{client_address} adresinden bağlantı kapatıldı.")
-
+	
 display = SSD1306Display(128, 32, 0x3C)
+
 def main():
     display.INIT()
     display.clear_display()
-    display.write_text(0,8,"HELLO")
-    display.write_text(0,20,"WORLD")
-    display.update()
-    
-    # Sunucu soketini oluştur
+    # Ctrl+C ile sunucuyu kapatmak için sinyal işleyici ekle
+    signal.signal(signal.SIGINT, signal_handler)
+
+    display.INIT()
+    display.clear_display()
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('0.0.0.0', 12346))  # Tüm ağ arayüzlerinden gelen bağlantıları kabul et
     server_socket.listen(5)
-
     print("Sunucu başlatıldı. İstemci bekleniyor...")
-
-    # Ctrl+C ile sunucuyu kapatmak için sinyal işleyici ekle
-    def signal_handler(sig, frame):
-        print("Ctrl+C ile sunucu kapatılıyor...")
-        server_socket.close()
-        sys.exit(0)
-    signal.signal(signal.SIGINT, signal_handler)
 
     while True:
         # Bağlantıyı kabul et
