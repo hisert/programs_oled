@@ -418,40 +418,68 @@ import sys
 # Gelen veriyi parse etmek için fonksiyon
 def parse_data(data):
     try:
-        data = data[data.index('(') + 1:data.index(')')]
+        # Veriyi '<' ve '>' arasındaki kısmı al
+        data = data[data.index('<') + 1:data.index('>')]
+        # ',' ile ayrılmış kısımları al
         parts = data.split(',')
+        # Parçalardan a, b ve c'yi çıkar
         temp_a = parts[0]
         temp_b = parts[1]
         temp_c = parts[2]
         return temp_a, temp_b, temp_c
     except Exception as e:
+        print("Veri ayrıştırma hatası:", e)
         return None, None, None
 
+# Ctrl+C sinyalini işleyen fonksiyon
 def signal_handler(sig, frame):
+    print("Ctrl+C ile sunucu kapatılıyor...")
     server_socket.close()
     sys.exit(0)
 
+# İstemciye hizmet veren fonksiyon
 def handle_client(client_socket, client_address):
+    print(f"{client_address} adresinden bağlantı kabul edildi.")
+
     while True:
+        # İstemciden gelen veriyi al
         data = client_socket.recv(1024)
         if not data:
             break
         received_message = data.decode()
+        print(f"Alınan veri: {received_message}")
+
+        # Gelen veriyi parse et
         temp_a, temp_b, temp_c = parse_data(received_message)
         if temp_a is not None and temp_b is not None and temp_c is not None:
             print(f"temp_a: {temp_a}, temp_b: {temp_b}, temp_c: {temp_c}")
-        client_socket.sendall(response.encode('utf-8'))
-    client_socket.close()
 
+        # İstemciye cevap gönder
+        response = "Veri alındı. Teşekkürler!"
+        client_socket.sendall(response.encode('utf-8'))
+
+    # Bağlantıyı kapat
+    client_socket.close()
+    print(f"{client_address} adresinden bağlantı kapatıldı.")
+
+# Ana fonksiyon
 def main():
+    # Ctrl+C sinyalini işle
     signal.signal(signal.SIGINT, signal_handler)
+
+    # Sunucu soketini oluştur ve bağlantıları kabul etmeye başla
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('0.0.0.0', 12347))
+    server_socket.bind(('0.0.0.0', 12348))
     server_socket.listen(5)
+    print("Sunucu başlatıldı. İstemci bekleniyor...")
 
     while True:
+        # İstemciden gelen bağlantıyı kabul et
         client_socket, client_address = server_socket.accept()
+
+        # İstemciye hizmet vermek için yeni bir iş parçacığı oluştur
         client_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
         client_thread.start()
+
 if __name__ == "__main__":
     main()
