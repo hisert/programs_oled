@@ -455,16 +455,11 @@ def signal_handler(sig, frame):
 
     sys.exit(0)
 
-def print_ip_thread():
-    while True:
-        # Hiçbir istemci bağlı değilse
-        if threading.active_count() == 1:
-            my_ip = get_ip_address()
-            display.clear_display()
-            display.write_text(0,8,my_ip)
-            display.update()
-            time.sleep(0.1)  # Küçük bir bekleme süresi ekle, CPU'yu çok yormamak için
-        time.sleep(1)  # 1 saniye bekle
+def print_ip():
+    my_ip = get_ip_address()
+    display.clear_display()
+    display.write_text(0,8,my_ip)
+    display.update()
 
 def handle_client(client_socket, client_address):
     while True:
@@ -480,14 +475,13 @@ def handle_client(client_socket, client_address):
                 display.write_text(0,20,temp_c)
                 display.update()
             if temp_a == "2":
-                my_ip = get_ip_address()
-                display.clear_display()
-                display.write_text(0,8,my_ip)
-                display.update()
+                print_ip()
     client_socket.close()
 
 display = SSD1306Display(128, 32, 0x3C)
+client_count = 0  # Bağlı istemci sayısı için sayaç
 def main():
+    global client_count
     display.init()
     signal.signal(signal.SIGINT, signal_handler)
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -495,17 +489,16 @@ def main():
     server_socket.listen(5)
     print("OLED PROG. STARTED")
 
-    # IP adresini bastırmak için ayrı bir thread oluştur
-    ip_thread = threading.Thread(target=print_ip_thread)
-
     while True:
         client_socket, client_address = server_socket.accept()
+        client_count += 1  # Bağlı istemci sayısını artır
         client_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
         client_thread.start()
 
-        # Hiçbir istemci bağlı değilse ve IP threadi başlamamışsa
-        if threading.active_count() == 1 and not ip_thread.is_alive():
-            ip_thread.start()
+        # Son bağlı istemci ise ve IP daha önce basılmamışsa
+        if client_count == 1:
+            print_ip()
+            client_count = 0  # Sayaçı sıfırla
 
 if __name__ == "__main__":
     main()
