@@ -446,7 +446,7 @@ def parse_data(data):
         return temp_a, temp_b, temp_c, temp_d
     except Exception as e:
         print("Veri ayrıştırma hatası:", e)
-        return None, None, None
+        return None, None, None, None
 
 def signal_handler(sig, frame):
     print("Ctrl+C ile sunucu kapatılıyor...")
