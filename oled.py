@@ -439,6 +439,7 @@ def parse_data(data):
         temp_a = parts[0]
         temp_b = ""
         temp_c = ""
+        temp_d = ""
         if temp_a == "1":
             temp_b = parts[1]
             temp_c = parts[2]
