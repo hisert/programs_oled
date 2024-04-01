@@ -444,6 +444,7 @@ display = SSD1306Display(128, 32, 0x3C)
 def main():
     display.INIT()
     display.clear_display()
+    display.update()
     # Ctrl+C ile sunucuyu kapatmak için sinyal işleyici ekle
     signal.signal(signal.SIGINT, signal_handler)
 
