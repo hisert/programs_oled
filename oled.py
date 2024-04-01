@@ -205,6 +205,7 @@ class SSD1306Display:
         self.ssd1306_command(self.SSD1306_DISPLAY_ON)
         self.clear_display()
         self.set_font()
+        self.update()
 	 
 
     def set_font(self):
@@ -419,7 +420,7 @@ import sys
 def parse_data(data):
     try:
         # Veriyi '<' ve '>' arasındaki kısmı al
-        data = data[data.index('(') + 1:data.index(')')]
+        data = data[data.index('<') + 1:data.index('>')]
         # ',' ile ayrılmış kısımları al
         parts = data.split(',')
         # Parçalardan a, b ve c'yi çıkar
@@ -454,8 +455,8 @@ def handle_client(client_socket, client_address):
         if temp_a is not None and temp_b is not None and temp_c is not None:
             print(f"temp_a: {temp_a}, temp_b: {temp_b}, temp_c: {temp_c}")
             display.clear_display()
-            display.write_text(0,8,temp_b)
-            display.write_text(0,20,temp_c)
+            display.write_text(0,8,"hello")
+            display.write_text(0,20,"TEMP  = ")
             display.update()
 			
 
@@ -471,14 +472,12 @@ def handle_client(client_socket, client_address):
 display = SSD1306Display(128, 32, 0x3C)
 def main():
     display.init()
-    display.clear_display()
-    display.update()
     # Ctrl+C sinyalini işle
     signal.signal(signal.SIGINT, signal_handler)
 
     # Sunucu soketini oluştur ve bağlantıları kabul etmeye başla
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('0.0.0.0', 12348))
+    server_socket.bind(('0.0.0.0', 12346))
     server_socket.listen(5)
     print("Sunucu başlatıldı. İstemci bekleniyor...")
 
