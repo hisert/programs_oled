@@ -498,7 +498,7 @@ def main():
         client_socket, client_address = server_socket.accept()
         client_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
         client_thread.start()
-		    client_count = client_count + 1
+        client_count = client_count + 1
 
 if __name__ == "__main__":
     main()
