@@ -490,10 +490,11 @@ def handle_client(client_socket, client_address):
 def main():
     global client_count
     display.init()
-    print_ip()
+    
     while True:
         if get_ip_address() != "":
             break
+    print_ip()
     signal.signal(signal.SIGINT, signal_handler)
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind(('0.0.0.0', 12346))
