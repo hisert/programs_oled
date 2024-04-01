@@ -466,7 +466,7 @@ def handle_client(client_socket, client_address):
     while True:
         data = client_socket.recv(1024)
         if not data:
-            if threading.active_count() == 1
+            if threading.active_count() == 1:
                 print_ip()
             break
         received_message = data.decode()
