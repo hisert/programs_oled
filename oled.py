@@ -446,7 +446,7 @@ def handle_client(client_socket, client_address):
 def main():
     signal.signal(signal.SIGINT, signal_handler)
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('0.0.0.0', 12346))
+    server_socket.bind(('0.0.0.0', 12347))
     server_socket.listen(5)
 
     while True:
