@@ -428,7 +428,7 @@ class MyServer:
         self.running = False
         self.custom_function = custom_function
         self.client_sockets = []  # Bağlı olan tüm client soketlerini saklamak için liste
-				self.client_counter = 0
+        self.client_counter = 0
 
     def start(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
