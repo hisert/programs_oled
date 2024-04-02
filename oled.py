@@ -563,10 +563,9 @@ def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     server.start()
     while True:
-        time.sleep(0.1)
+        time.sleep(0.5)
         if server.get_client_count() == 0:
-            print_ip()
-	          
+            print_ip()	          
 
 if __name__ == "__main__":
     main()
