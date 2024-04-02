@@ -453,7 +453,7 @@ class MyServer:
                 self.client_sockets.append(client_socket)  # Yeni client soketini listeye ekle
                 client_thread = threading.Thread(target=self.handle_client, args=(client_socket, client_address))
                 client_thread.start()
-								self.client_counter = self.client_counter + 1
+                self.client_counter = self.client_counter + 1
             except KeyboardInterrupt:
                 self.stop()
                 break
@@ -462,7 +462,7 @@ class MyServer:
         while True:
             data = client_socket.recv(1024)
             if not data:
-								self.client_counter = self.client_counter - 1
+                self.client_counter = self.client_counter - 1
                 break
             if self.custom_function:
                 self.custom_function(data.decode())
