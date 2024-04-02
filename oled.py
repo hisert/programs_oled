@@ -511,7 +511,7 @@ def print_ip():
 
 def data_arrived(data):
     global server
-    received_message = data
+    received_message = data.decode()
     received_message = received_message.replace('(', '<')
     received_message = received_message.replace(')', '>')
     temp_a, temp_b, temp_c , temp_d = parse_data(received_message)
