@@ -488,7 +488,7 @@ def get_ip_address():
 
 def parse_data(data):
     try:
-        data = data[data.index('(') + 1:data.index(')')]
+        data = data[data.index('<') + 1:data.index('>')]
         parts = data.split(',')
         temp_a = parts[0]
         temp_b = ""
@@ -511,9 +511,9 @@ def print_ip():
 
 def data_arrived(data):
     global server
-    received_message = data.decode()
-    received_message = received_message.replace('(', '<')
-    received_message = received_message.replace(')', '>')
+    received_message = data
+    received_message = received_message.replace(')', '<')
+    received_message = received_message.replace('(', '>')
     temp_a, temp_b, temp_c , temp_d = parse_data(received_message)
     if temp_a is not None and temp_b is not None and temp_c is not None:
         if temp_a == "0":
