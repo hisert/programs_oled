@@ -532,19 +532,20 @@ def data_arrived(data):
             display.update()
         if temp_a == "9":
             print_ip()
-	
+def check_connection():
+    while True:
+        time.sleep(0.5)
+        ip_find = get_ip_address().find("192.168")
+        if ip_find != -1:
+            break 
+          
 server = MyServer('0.0.0.0', 12344, 5, custom_function=data_arrived)  	
 display = SSD1306Display(128, 32, 0x3C)
  
 def main():
-    display.init()    
-    while True:
-        ip_find = get_ip_address().find("192.168")
-        if ip_find != -1:
-            break
-        else:
-            time.sleep(0.5)
     print("OLED PROG. STARTED")
+    display.init()    
+    check_connection()
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     server.start()
     while True:
