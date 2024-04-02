@@ -528,7 +528,7 @@ def print_ip():
     my_hum = get_cpu_temperature()
     display.clear_display()
     display.write_text(0,8,my_ip)
-    display.write_text(0,20,my_hum)
+    display.write_text(0,20,"TEMP = "+ my_hum)
     display.update()
 
 def data_arrived(data):
