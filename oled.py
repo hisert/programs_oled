@@ -515,8 +515,11 @@ def data_arrived(data):
     received_message = received_message.replace(')', '>')
     print(received_message)
     server.send(received_message)
-  
-server = MyServer('0.0.0.0', 12349, 5, custom_function=data_arrived)        
+	
+server = MyServer('0.0.0.0', 12349, 5, custom_function=data_arrived)  	
+display = SSD1306Display(128, 32, 0x3C)
+client_count = 0  
+      
 def main():
     global client_count
     display.init()
