@@ -428,6 +428,7 @@ class MyServer:
         self.running = False
         self.custom_function = custom_function
         self.client_sockets = []  # Bağlı olan tüm client soketlerini saklamak için liste
+				self.client_counter = 0
 
     def start(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -452,6 +453,7 @@ class MyServer:
                 self.client_sockets.append(client_socket)  # Yeni client soketini listeye ekle
                 client_thread = threading.Thread(target=self.handle_client, args=(client_socket, client_address))
                 client_thread.start()
+								self.client_counter = self.client_counter + 1
             except KeyboardInterrupt:
                 self.stop()
                 break
@@ -460,6 +462,7 @@ class MyServer:
         while True:
             data = client_socket.recv(1024)
             if not data:
+								self.client_counter = self.client_counter - 1
                 break
             if self.custom_function:
                 self.custom_function(data.decode())
@@ -473,6 +476,7 @@ class MyServer:
                 client_socket.sendall(message.encode())
             except Exception as e:
                 print("Error sending message to client:", e)
+					
               
 def get_ip_address():
     ip_address = ''
