@@ -512,8 +512,8 @@ def print_ip():
 def data_arrived(data):
     global server
     received_message = data
-    received_message = received_message.replace(')', '<')
-    received_message = received_message.replace('(', '>')
+    received_message = received_message.replace('(', '<')
+    received_message = received_message.replace(')', '>')
     temp_a, temp_b, temp_c , temp_d = parse_data(received_message)
     if temp_a is not None and temp_b is not None and temp_c is not None:
         if temp_a == "0":
