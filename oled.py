@@ -411,15 +411,69 @@ class SSD1306Display:
         with smbus2.SMBus(self.I2c_channel) as bus:
             bus.write_i2c_block_data(address, data[0], data[1:])
 
+
 import socket
 import threading
 import signal
-import sys
 import time
+import sys
 
-display = SSD1306Display(128, 32, 0x3C)
-client_count = 0
+class MyServer:
+  
+    def __init__(self, host, port, backlog, custom_function=None):
+        self.host = host
+        self.port = port
+        self.backlog = backlog
+        self.server_socket = None
+        self.running = False
+        self.custom_function = custom_function
+        self.client_sockets = []  # Bağlı olan tüm client soketlerini saklamak için liste
 
+    def start(self):
+        self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server_socket.bind((self.host, self.port))
+        self.server_socket.listen(self.backlog)
+
+        self.running = True
+        self.server_thread = threading.Thread(target=self.server_loop)
+        self.server_thread.start()
+
+    def stop(self):
+        self.running = False
+        if self.server_socket:
+            self.server_socket.close()
+        if self.server_thread:
+            self.server_thread.join()
+
+    def server_loop(self):
+        while self.running:
+            try:
+                client_socket, client_address = self.server_socket.accept()
+                self.client_sockets.append(client_socket)  # Yeni client soketini listeye ekle
+                client_thread = threading.Thread(target=self.handle_client, args=(client_socket, client_address))
+                client_thread.start()
+            except KeyboardInterrupt:
+                self.stop()
+                break
+
+    def handle_client(self, client_socket, client_address):
+        while True:
+            data = client_socket.recv(1024)
+            if not data:
+                break
+            if self.custom_function:
+                self.custom_function(data.decode())
+
+        client_socket.close()
+        self.client_sockets.remove(client_socket)  # Client soketini listeden kaldır
+
+    def send(self, message):
+        for client_socket in self.client_sockets:
+            try:
+                client_socket.sendall(message.encode())
+            except Exception as e:
+                print("Error sending message to client:", e)
+              
 def get_ip_address():
     ip_address = ''
     try:
@@ -449,41 +503,20 @@ def parse_data(data):
         print("Veri ayrıştırma hatası:", e)
         return None, None, None, None
 
-def signal_handler(sig, frame):
-    server_socket.close()  
-    for thread in threading.enumerate():
-        if thread != threading.main_thread():  # Ana threadi kapatma
-            thread.join()
-    sys.exit(0)
-
 def print_ip():
     my_ip = get_ip_address()
     display.clear_display()
     display.write_text(0,8,my_ip)
     display.update()
 
-def handle_client(client_socket, client_address):
-    global client_count
-    while True:
-        data = client_socket.recv(1024)
-        if not data:
-            client_count = client_count - 1
-            if client_count == 0:
-                print_ip()
-            break
-        received_message = data.decode()
-        temp_a, temp_b, temp_c , temp_d = parse_data(received_message)
-        if temp_a is not None and temp_b is not None and temp_c is not None:
-            if temp_a == "0":
-                display.clear_display()
-            if temp_a == "1":
-                display.write_text(int(temp_b),int(temp_c),temp_d)
-            if temp_a == "2":
-                display.update()
-            if temp_a == "9":
-                print_ip()
-    client_socket.close()
-
+def data_arrived(data):
+    global server
+    received_message = data.replace('(', '<')
+    received_message = received_message.replace(')', '>')
+    print(received_message)
+    server.send(received_message)
+  
+server = MyServer('0.0.0.0', 12349, 5, custom_function=data_arrived)        
 def main():
     global client_count
     display.init()
@@ -495,19 +528,12 @@ def main():
         else:
             time.sleep(0.5)
     print_ip()
-    signal.signal(signal.SIGINT, signal_handler)
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('0.0.0.0', 12345))
-    server_socket.listen(5)
     print("OLED PROG. STARTED")
-
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
+    server.start()
     while True:
-        client_socket, client_address = server_socket.accept()
-        client_thread = threading.Thread(target=handle_client, args=(client_socket, client_address))
-        client_thread.start()
-        client_count = client_count + 1
+        print ("asker")
+        time.sleep(1)
 
 if __name__ == "__main__":
     main()
-
-
