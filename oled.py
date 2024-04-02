@@ -529,10 +529,8 @@ def data_arrived(data):
 	
 server = MyServer('0.0.0.0', 12344, 5, custom_function=data_arrived)  	
 display = SSD1306Display(128, 32, 0x3C)
-client_count = 0  
-      
+ 
 def main():
-    global client_count
     display.init()    
     while True:
         ip_find = get_ip_address().find("192.168")
@@ -545,8 +543,11 @@ def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     server.start()
     while True:
-        print ("asker")
         time.sleep(1)
+        print ("asker")
+        if threading.active_count() == 1:
+            print_ip()
+	          
 
 if __name__ == "__main__":
     main()
