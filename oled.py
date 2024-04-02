@@ -511,7 +511,10 @@ def get_cpu_load():
     output = subprocess.check_output(['uptime']).decode('utf-8')
     load_info = output.split('load average:')[1].strip().split(',')
     load_1min = float(load_info[0])
-    return str(load_1min)
+    load_5min = float(load_info[1])
+    load_15min = float(load_info[2])
+    data_ret = str(load_1min) + " " + str(load_5min) + " " + str(load_15min)
+    return data_ret
 
 def parse_data(data):
     try:
@@ -537,7 +540,7 @@ def print_ip():
     display.clear_display()
     display.write_text(0,0,my_ip)
     display.write_text(0,8,"TEMP = "+ my_hum)
-    display.write_text(0,16,"LOAD = "+ my_load)
+    display.write_text(0,16,my_load)
     display.update()
 
 def data_arrived(data):
