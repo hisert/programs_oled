@@ -418,6 +418,7 @@ import signal
 import time
 import sys
 import psutil
+import subprocess
 
 class MyServer:
   
@@ -506,6 +507,12 @@ def get_cpu_temperature():
     except Exception as e:
         return ""
 
+def get_cpu_load():
+    output = subprocess.check_output(['uptime']).decode('utf-8')
+		load_info = output.split('load average:')[1].strip().split(',')
+		load_1min = float(load_info[0])
+    return load_1min
+
 def parse_data(data):
     try:
         data = data[data.index('<') + 1:data.index('>')]
@@ -526,9 +533,11 @@ def parse_data(data):
 def print_ip():
     my_ip = get_ip_address()
     my_hum = get_cpu_temperature()
+    my_load = get_cpu_load()
     display.clear_display()
     display.write_text(0,8,my_ip)
-    display.write_text(0,20,"TEMP = "+ my_hum)
+    display.write_text(0,16,"TEMP = "+ my_hum)
+    display.write_text(0,24,"LOAD = "+ my_load)
     display.update()
 
 def data_arrived(data):
@@ -546,6 +555,7 @@ def data_arrived(data):
             display.update()
         if temp_a == "9":
             print_ip()
+            
 def check_connection():
     while True:
         time.sleep(0.5)
