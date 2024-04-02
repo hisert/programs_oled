@@ -510,10 +510,10 @@ def get_cpu_temperature():
 def get_cpu_load():
     output = subprocess.check_output(['uptime']).decode('utf-8')
     load_info = output.split('load average:')[1].strip().split(',')
-    load_1min = float(load_info[0])
-    load_5min = float(load_info[1])
-    load_15min = float(load_info[2])
-    data_ret = str(load_1min) + " " + str(load_5min) + " " + str(load_15min)
+    load_1min = round(float(load_info[0]), 2)  # 1 dakikalık yükü 2 ondalık basamağa yuvarla
+    load_5min = round(float(load_info[1]), 2)  # 5 dakikalık yükü 2 ondalık basamağa yuvarla
+    load_15min = round(float(load_info[2]), 2)  # 15 dakikalık yükü 2 ondalık basamağa yuvarla
+    data_ret = "{:.2f} {:.2f} {:.2f}".format(load_1min, load_5min, load_15min)  # string formatlama ile değerleri birleştir
     return data_ret
 
 def parse_data(data):
