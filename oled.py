@@ -511,7 +511,7 @@ def get_cpu_load():
     output = subprocess.check_output(['uptime']).decode('utf-8')
     load_info = output.split('load average:')[1].strip().split(',')
     load_1min = float(load_info[0])
-    return load_1min
+    return str(load_1min)
 
 def parse_data(data):
     try:
