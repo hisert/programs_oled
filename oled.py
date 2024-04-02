@@ -540,7 +540,7 @@ def print_ip():
     display.clear_display()
     display.write_text(0,0,my_ip)
     display.write_text(0,8,"TEMP = "+ my_hum)
-    display.write_text(0,16,my_load)
+    display.write_text(0,16,"LOAD = "+my_load)
     display.update()
 
 def data_arrived(data):
