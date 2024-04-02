@@ -476,6 +476,10 @@ class MyServer:
                 client_socket.sendall(message.encode())
             except Exception as e:
                 print("Error sending message to client:", e)
+                
+    def get_client_count(self):
+ 
+        return self.client_counter
 					
               
 def get_ip_address():
@@ -549,7 +553,7 @@ def main():
     while True:
         time.sleep(1)
         print ("asker")
-        if threading.active_count() == 1:
+        if server.get_client_count() == 0:
             print_ip()
 	          
 
