@@ -511,8 +511,19 @@ def print_ip():
 
 def data_arrived(data):
     global server
-    received_message = data.replace('(', '<')
+	  received_message = data
+    received_message = received_message.replace('(', '<')
     received_message = received_message.replace(')', '>')
+    temp_a, temp_b, temp_c , temp_d = parse_data(received_message)
+    if temp_a is not None and temp_b is not None and temp_c is not None:
+        if temp_a == "0":
+            display.clear_display()
+        if temp_a == "1":
+            display.write_text(int(temp_b),int(temp_c),temp_d)
+        if temp_a == "2":
+            display.update()
+        if temp_a == "9":
+            print_ip()
     print(received_message)
     server.send(received_message)
 	
@@ -522,8 +533,7 @@ client_count = 0
       
 def main():
     global client_count
-    display.init()
-    
+    display.init()    
     while True:
         ip_find = get_ip_address().find("192.168")
         if ip_find != -1:
