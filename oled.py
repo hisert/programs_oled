@@ -576,7 +576,7 @@ def main():
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     server.start()
     while True:
-        time.sleep(0.5)
+        time.sleep(1)
         if server.get_client_count() == 0:
             print_ip()	          
 
