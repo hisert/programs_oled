@@ -566,7 +566,7 @@ def check_connection():
         if ip_find != -1:
             break 
           
-server = MyServer('0.0.0.0', 12344, 5, custom_function=data_arrived)  	
+server = MyServer('0.0.0.0', 12344, 1, custom_function=data_arrived)  	
 display = SSD1306Display(128, 32, 0x3C)
  
 def main():
