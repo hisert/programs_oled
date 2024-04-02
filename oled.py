@@ -546,13 +546,11 @@ def main():
             break
         else:
             time.sleep(0.5)
-    print_ip()
     print("OLED PROG. STARTED")
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     server.start()
     while True:
-        time.sleep(1)
-        print ("asker")
+        time.sleep(0.1)
         if server.get_client_count() == 0:
             print_ip()
 	          
