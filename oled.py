@@ -417,6 +417,7 @@ import threading
 import signal
 import time
 import sys
+import psutil
 
 class MyServer:
   
@@ -494,6 +495,17 @@ def get_ip_address():
         ip_address=""
     return ip_address
 
+def get_cpu_temperature():
+    temperature_file = "/sys/class/thermal/thermal_zone0/temp"
+    try:
+        with open(temperature_file, "r") as file:
+            temperature_str = file.read().strip()
+            temperature = float(temperature_str) / 1000.0  # Sıcaklığı derece cinsine dönüştür
+            formatted_temperature = "{:.3f}".format(temperature)  # En fazla üç ondalık basamaklı sıcaklık
+            return formatted_temperature   # Sıcaklığı string olarak döndür
+    except Exception as e:
+        return ""
+
 def parse_data(data):
     try:
         data = data[data.index('<') + 1:data.index('>')]
@@ -513,8 +525,10 @@ def parse_data(data):
 
 def print_ip():
     my_ip = get_ip_address()
+    my_hum = get_cpu_temperature()
     display.clear_display()
     display.write_text(0,8,my_ip)
+    display.write_text(0,20,my_hum)
     display.update()
 
 def data_arrived(data):
