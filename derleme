@@ -5,6 +5,7 @@ rm -r programs_oled
 pkill oled.py
 git clone https://github.com/hisert/programs_oled.git
 cd  programs_oled
+chmod +x derleme
 python3 oled.py
 
 
