@@ -1,3 +1,5 @@
 sudo apt install python3-pip -y
 
-sudo apt install -y python3-smbus2
+pip3 install smbus2
+
+pip3 install psutil
