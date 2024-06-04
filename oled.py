@@ -1,5 +1,5 @@
 import smbus2
-import anime_walk
+from PIL import Image
 
 class SSD1306Display:
 
@@ -575,9 +575,12 @@ display = SSD1306Display(128, 32, 0x3C)
 def main():
     print("OLED PROG. STARTED")
     display.init()    
-    display.image(anime_walk.frames[:128])
+    image = Image.open("harddisk.png")
+    resized_image = image.resize((128, 32))
+    bitmap = resized_image.convert("1")
+    display.image(bitmap)
     display.update()
-    time.sleep(20)
+  #  time.sleep(20)
     check_connection()
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     server.start()
