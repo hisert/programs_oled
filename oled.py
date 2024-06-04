@@ -577,7 +577,7 @@ def main():
     display.init()    
     display.image(anime_walk.frames[:128])
     display.update()
-    time.sleep(2)
+    time.sleep(20)
     check_connection()
     signal.signal(signal.SIGINT, signal.SIG_DFL)
     server.start()
