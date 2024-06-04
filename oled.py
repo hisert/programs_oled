@@ -203,6 +203,8 @@ class SSD1306Display:
         self.ssd1306_command(self.SSD1306_NORMAL_DISPLAY)
         self.ssd1306_command(self.SSD1306_DEACTIVATE_SCROLL)
         self.ssd1306_command(self.SSD1306_DISPLAY_ON)
+        self.ssd1306_command(0xC0)
+        self.ssd1306_command(0xA0)
         self.clear_display()
         self.set_font()
         self.update()
