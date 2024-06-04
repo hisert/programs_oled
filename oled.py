@@ -575,15 +575,15 @@ display = SSD1306Display(128, 32, 0x3C)
 def main():
     print("OLED PROG. STARTED")
     display.init()    
-    image = Image.open("harddisk.png")
-    width, height = image.size
-    left = (width - 128) / 2
-    top = (height - 32) / 2
-    cropped_image = image.crop((left, top, left + 128, top + 32))
-    bitmap = cropped_image.convert("1")
-    bitmap_bytearray = bytearray(bitmap.tobytes())
-    display.image(bitmap_bytearray)
-    display.update()
+  #  image = Image.open("harddisk.png")
+  #  width, height = image.size
+  #  left = (width - 128) / 2
+  #  top = (height - 32) / 2
+  #  cropped_image = image.crop((left, top, left + 128, top + 32))
+  #  bitmap = cropped_image.convert("1")
+  #  bitmap_bytearray = bytearray(bitmap.tobytes())
+  #  display.image(bitmap_bytearray)
+  #  display.update()
   #  time.sleep(20)
     check_connection()
     signal.signal(signal.SIGINT, signal.SIG_DFL)
