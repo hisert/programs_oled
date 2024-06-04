@@ -575,7 +575,7 @@ display = SSD1306Display(128, 32, 0x3C)
 def main():
     print("OLED PROG. STARTED")
     display.init()    
-    display.image(anime_walk.frames[:128]])
+    display.image(anime_walk.frames[:128])
     display.update()
     time.sleep(2)
     check_connection()
