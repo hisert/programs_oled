@@ -1,5 +1,4 @@
 import smbus2
-import anime_walk
 
 class SSD1306Display:
 
@@ -499,26 +498,6 @@ def get_ip_address():
         ip_address=""
     return ip_address
 
-def get_cpu_temperature():
-    temperature_file = "/sys/class/thermal/thermal_zone0/temp"
-    try:
-        with open(temperature_file, "r") as file:
-            temperature_str = file.read().strip()
-            temperature = float(temperature_str) / 1000.0  # Sıcaklığı derece cinsine dönüştür
-            formatted_temperature = "{:.3f}".format(temperature)  # En fazla üç ondalık basamaklı sıcaklık
-            return formatted_temperature   # Sıcaklığı string olarak döndür
-    except Exception as e:
-        return ""
-
-def get_cpu_load():
-    output = subprocess.check_output(['uptime']).decode('utf-8')
-    load_info = output.split('load average:')[1].strip().split(',')
-    load_1min = int(float(load_info[0]) * 100 / 1)  # 1 dakikalık yükün ondalık kısmını 100 ile çarp ve maksimum 2 haneli olacak şekilde tam sayıya dönüştür
-    load_5min = int(float(load_info[1]) * 100 / 1)  # 5 dakikalık yükün ondalık kısmını 100 ile çarp ve maksimum 2 haneli olacak şekilde tam sayıya dönüştür
-    load_15min = int(float(load_info[2]) * 100 / 1)  # 15 dakikalık yükün ondalık kısmını 100 ile çarp ve maksimum 2 haneli olacak şekilde tam sayıya dönüştür
-    data_ret = "{} {} {}".format(load_1min, load_5min, load_15min)  # string formatlama ile değerleri birleştir
-    return data_ret
-
 def parse_data(data):
     try:
         data = data[data.index('<') + 1:data.index('>')]
@@ -538,12 +517,8 @@ def parse_data(data):
 
 def print_ip():
     my_ip = get_ip_address()
-    my_hum = get_cpu_temperature()
-    my_load = get_cpu_load()
     display.clear_display()
     display.write_text(0,0,my_ip)
-    display.write_text(0,8,"TEMP = "+ my_hum)
-    display.write_text(0,16,"LOAD = "+my_load)
     display.update()
 
 def data_arrived(data):
@@ -581,9 +556,8 @@ def main():
     while True:
         time.sleep(1)
         if server.get_client_count() == 0:
-            #print_ip()	    
-            display.image(anime_walk.byte_array)
-            display.update()
+            print_ip()	  
+            time.sleep(1000)
 
 if __name__ == "__main__":
     main()
